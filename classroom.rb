@@ -1,4 +1,4 @@
-class Classroom
+class Classrom
   attr_accessor :label
   attr_reader :students
 
@@ -8,7 +8,7 @@ class Classroom
   end
 
   def add_student(student)
-    @students << student
-    student.classroom = self
+    @students.push(student)
+    student.classrom = self
   end
 end
