@@ -1,5 +1,5 @@
 require_relative 'person'
-# Teacher class
+
 class Teacher < Person
   def initialize(specialization)
     super(name, age, parent_permission)
