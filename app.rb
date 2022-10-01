@@ -13,11 +13,13 @@ class App
   end
 
   def list_all_books
-    @books.each { |b| puts "Title: #{b.title}, Author: #{b.author}" }
+    puts 'No books found' if @books.empty?
+    @books.each_with_index { |b, i| puts "#{i}) Title: #{b.title}, Author: #{b.author}" }
   end
 
   def list_all_people
-    @people.each { |p| puts "[#{p.class}] Name: #{p.name}, ID: #{p.id}, Age: #{p.age}" }
+    puts 'No people exist' if @people.empty?
+    @people.each_with_index { |p, i| puts "#{i}) [#{p.class}] Name: #{p.name}, ID: #{p.id}, Age: #{p.age}" }
   end
 
   def parent_permission?
@@ -39,6 +41,7 @@ class App
   def person_choice
     print 'Do you want to create a student (1) or a teacher (2)? [Input the number]: '
     answer = gets.chomp.to_i
+
     if [1, 2].include?(answer)
       answer
     else
@@ -57,57 +60,54 @@ class App
     case answer
     when 1
       parent_permission = parent_permission?
-      @people << Student.new(age, name, parent_permission)
+      @people.push(Student.new(age, name, parent_permission: parent_permission))
+      puts "#{name.capitalize} added successfully 💓"
     when 2
       print 'Specialization: '
       specialization = gets.chomp
-      @people << Teacher.new(specialization, age, name)
+      @people.push(Teacher.new(age, specialization, name))
     end
-    puts 'Person created successfully'
   end
 
   def create_a_book
+    puts 'Create a new book'
     print 'Title: '
     title = gets.chomp
 
     print 'Author: '
     author = gets.chomp
 
-    @books << Book.new(title, author)
+    @books.push(Book.new(title, author))
 
-    puts 'Book created successfully'
+    puts "#{title} book added successfully 😊"
   end
 
   def create_a_rental
-    puts 'Select a book from the following list by number'
-    @books.each_with_index { |b, i| puts "#{i}) Title: #{b.title}, Author: #{b.author}" }
-    index = gets.to_i
-    book = @books[index]
+    puts 'Select a book from the following list by the number:'
+    list_all_books
 
-    puts 'Select a person from the following list by number (not id)'
-    @people.each_with_index { |p, i| puts "#{i}) [#{p.class}] Name: #{p.name}, ID: #{p.id}, Age: #{p.age}" }
-    index = gets.to_i
-    person = @people[index]
+    book_index = gets.chomp.to_i
+    puts 'Select a person from the following list by the number (not id):'
+    list_all_people
 
-    print 'Date: '
+    person_index = gets.chomp.to_i
+
+    puts 'Date:'
     date = gets.chomp
 
-    rental = Rental.new(date, book, person)
-    rental.add_book(book, person)
-    @rentals << rental
+    @rentals.push(Rental.new(date, @people[person_index], @books[book_index]))
 
-    puts 'Rental created successfully'
+    puts 'Rental created successfully 😊'
   end
 
   def list_all_rentals_for_a_given_person_id
     print 'ID of person: '
     id = gets.chomp.to_i
 
-    person = @people.select { |p| p.id == id }
-
     puts 'Rentals:'
-    person[0].rentals.each do |r|
-      puts "Date: #{r.date}, Book #{r.book.title} by #{r.book.author}"
+    @rentals.each do |rental|
+      puts "Date: #{rental.date}, Book: #{rental.book.title} by #{rental.book.author}" if rental.person.id == id
+      puts 'No rentals found' if @rentals.empty?
     end
   end
 
