@@ -95,7 +95,7 @@ class App
     puts 'Date:'
     date = gets.chomp
 
-    @rentals.push(Rental.new(date, @people[person_index], @books[book_index]))
+    @rentals.push(Rental.new(date, @books[book_index], @people[person_index]))
 
     puts 'Rental created successfully 😊'
   end
